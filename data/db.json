@@ -1,0 +1,12 @@
+{
+  "Products": [
+    {
+      "id": "3f6f59ce-3f75-410e-b134-6637a462c6c0",
+      "product_name": "prod",
+      "price": 5000,
+      "description": "descripcion",
+      "category": "categoria 2",
+      "image": "url_imagen"
+    }
+  ]
+}
