@@ -14,15 +14,15 @@ export class ProductService {
     const description = await createProductDto.description;
     const category = await createProductDto.category;
     const image = await createProductDto.image;
-    // const stock = await createProductDto.stock; //!
+    const stock = await createProductDto.stock;
     const newProduct = {
       id,
       product_name: productName,
       price,
       description,
       category,
+      stock,
       image,
-      // stock, // !
     };
     const res = await fetch(DB_URL, {
       method: 'POST',
@@ -44,6 +44,7 @@ export class ProductService {
       price: product.price,
       description: product.description,
       category: product.category,
+      stock: product.stock,
       image: product.image,
     }));
     return showProduct;

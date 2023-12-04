@@ -18,8 +18,7 @@ export class ProductController {
       res.status(HttpStatus.CREATED).json(serviceResponse)
       console.log('Producto creado exitosamente');
     } catch (error) {
-        console.log(error)
-        throw new BadRequestException('product creation failed')
+        throw new BadRequestException('fallo la creacion del producto')
     }
   }
 
@@ -38,7 +37,6 @@ export class ProductController {
   @Get(':id')
   @UsePipes(new ValidationPipe({transform: true}))
   async findOneProducts(@Param('id') id: string, @Res() res: Response): Promise<any>  {
-    // return this.productService.findOneProduct(id);
     try {
       const serviceResponse = await this.productService.findOneProduct(id);
       if(Object.keys(serviceResponse).length){

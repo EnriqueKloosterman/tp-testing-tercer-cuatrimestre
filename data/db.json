@@ -1,12 +1,22 @@
 {
   "Products": [
     {
-      "id": "3f6f59ce-3f75-410e-b134-6637a462c6c0",
-      "product_name": "prod",
-      "price": 5000,
+      "id": "25f977bc-6f47-4d96-a014-8266db22d4dc",
+      "product_name": "prod1",
+      "price": 2000,
       "description": "descripcion",
-      "category": "categoria 2",
-      "image": "url_imagen"
+      "category": "categoria 1",
+      "image": "url_imagen",
+      "stock": 40
+    },
+    {
+      "id": "a6f0704b-facd-439c-9231-3297ff241e26",
+      "product_name": "prod2",
+      "price": 2000,
+      "description": "descripcion",
+      "category": "categoria 1",
+      "image": "url_imagen_2",
+      "stock": 50
     }
   ]
 }
