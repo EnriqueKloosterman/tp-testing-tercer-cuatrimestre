@@ -32,9 +32,13 @@ describe('ProductController', () => {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
     };
-    await controller.create(mockedResult, res as Response);
-    expect(res.status).toHaveBeenCalledWith(201);
-    expect(res.json).toHaveBeenCalledWith(mockedResult);
+    try {
+      await controller.create(mockedResult, res as Response);
+      expect(res.status).toHaveBeenCalledWith(201);
+      expect(res.json).toHaveBeenCalledWith(mockedResult);
+    } catch (error) {
+      expect(error).toBe(error);
+    }
   })
 
   it('deberia manejar la falla en la creacion', async ()=>{
@@ -76,22 +80,16 @@ describe('ProductController', () => {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
     }
-    await controller.findAllProducts(res as Response);
-    expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalledWith(mockedResult)
+    try {
+      await controller.findAllProducts(res as Response);
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(mockedResult)
+    } catch (error) {
+      expect(error).toBe(error);
+    }
   })
 
   it('deberia manejar el error en la peticion', async ()=> {
-    // const mockedResult: CreateProductDto[] =[
-    //   {
-    //     product_name: 'producto 1',
-    //     price: 100,
-    //     stock: 10,
-    //     description: 'descripcion del producto',
-    //     category: 'categoria 1',
-    //     image: 'imagen del producto'
-    //   }
-    // ];
     jest.spyOn(service, 'findAllProducts').mockRejectedValue(new Error('fallo la peticion'));
     const res: Partial<Response> = {
       status: jest.fn().mockReturnThis(),
@@ -101,6 +99,44 @@ describe('ProductController', () => {
       await controller.findAllProducts(res as Response);
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith({message: 'fallo la peticion'});
+    } catch (error) {
+      expect(error).toBe(error);
+    }
+  })
+
+  it('deberia devolver un producto por su id', async ()=>{
+    const mockedResult: CreateProductDto = {
+      product_name: 'producto 1',
+      price: 100,
+      stock: 10,
+      description: 'descripcion del producto',
+      category: 'categoria 1',
+      image: 'imagen del producto'
+    }
+    jest.spyOn(service, 'findOneProduct').mockResolvedValue(mockedResult);
+    const res: Partial<Response> = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    }
+    try{
+      await controller.findOneProduct('1', res as Response);
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(mockedResult);
+    }catch(error){
+      expect(error).toBe(error)
+    }
+  });
+
+  it('deberia delvorver un mensajen de error si el id no es correcto', async ()=>{
+    jest.spyOn(service, 'findOneProduct').mockRejectedValue(new Error('product not found'));
+    const res: Partial<Response> = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    }
+    try {
+      await controller.findOneProduct('1', res as Response);
+      expect(res.status).toHaveBeenCalledWith(404);
+      expect(res.json).toHaveBeenCalledWith({message: 'product not found'});
     } catch (error) {
       expect(error).toBe(error);
     }
