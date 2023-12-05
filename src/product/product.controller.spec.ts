@@ -142,5 +142,43 @@ describe('ProductController', () => {
     }
   })
 
+  it('deberia eliminar un producto existente', async () => {
+    const productId = '1';
+    const deletedProduct: CreateProductDto = {
+      product_name: 'Producto Eliminado',
+      price: 100,
+      stock: 10,
+      description: 'Descripción del producto eliminado',
+      category: 'Categoría del producto eliminado',
+      image: 'imagen-eliminada.jpg'
+    };
+    jest.spyOn(service, 'deleteProduct').mockResolvedValue(deletedProduct);
+    const res: Partial<Response> = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+    try {
+      await controller.remove(productId, res as Response);
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(deletedProduct);
+    } catch (error) {
+      expect(error).toBe(error);
+    }
+  });
+  it('deberia manejar el error al intentar eliminar un producto', async () => {
+    const productId = 'invalid_id';
+    jest.spyOn(service, 'deleteProduct').mockRejectedValue(new Error('Error al eliminar el producto'));
+    const res: Partial<Response> = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+    try {
+      await controller.remove(productId, res as Response);
+      expect(res.status).toHaveBeenCalledWith(404);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Error al eliminar el producto' });
+    } catch (error) {
+      expect(error.message).toBe('Product with id invalid_id not found');
+    }
+  });
 });
 
