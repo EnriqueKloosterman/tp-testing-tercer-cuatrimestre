@@ -180,5 +180,28 @@ describe('ProductController', () => {
       expect(error.message).toBe('Product with id invalid_id not found');
     }
   });
+  it('deberia actualizar un producto existente', async () => {
+    const productId = '1';
+    const updateProduct: CreateProductDto = {
+      product_name: 'Producto Actualizado',
+      price: 150,
+      stock: 20,
+      description: 'Nueva descripción',
+      category: 'Nueva Categoría',
+      image: 'nueva-imagen.jpg'
+    };
+    jest.spyOn(service, 'updateProduct').mockResolvedValue(updateProduct);
+    const res: Partial<Response> = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+    try {
+      await controller.updateProduct(productId, updateProduct);
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(updateProduct);
+    } catch (error) {
+      expect(error).toBe(error);
+    }
+  });
 });
 
