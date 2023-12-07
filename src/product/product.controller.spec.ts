@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ProductController } from './product.controller';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
+import  { UpdateProductDto } from './dto/update-product.dto';
 import { Response } from 'express';
 
 describe('ProductController', () => {
@@ -182,7 +183,7 @@ describe('ProductController', () => {
   });
   it('deberia actualizar un producto existente', async () => {
     const productId = '1';
-    const updateProduct: CreateProductDto = {
+    const updateProduct: UpdateProductDto = {
       product_name: 'Producto Actualizado',
       price: 150,
       stock: 20,
@@ -203,5 +204,31 @@ describe('ProductController', () => {
       expect(error).toBe(error);
     }
   });
+
+
+  it('deberia manejar el error al intentar actualizar un producto', async () => {
+    const updatedProduct: UpdateProductDto = {
+      product_name: 'Producto Actualizado',
+      price: 150,
+      stock: 20,
+      description: 'Nueva descripción',
+      category: 'Nueva Categoría',
+      image: 'nueva-imagen.jpg'
+    };
+    jest.spyOn(service, 'updateProduct').mockImplementation(() => Promise.reject(new Error('product not found')));
+    const res: Partial<Response> = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+    try {
+      await controller.updateProduct('1', updatedProduct);
+      expect(res.status).toHaveBeenCalledWith(404);
+      expect(res.json).toHaveBeenCalledWith({ message: 'product not found' });
+    } catch (error) {
+      expect(error.message).toBe('product not found');
+    } 
+   })
+
+
 });
 

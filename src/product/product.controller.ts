@@ -51,10 +51,10 @@ export class ProductController {
 
   @Put(':id')
   @UsePipes(new ValidationPipe({transform: true}))
-  updateProduct(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto): Promise<UpdateProductDto> {
+  async updateProduct(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto): Promise<UpdateProductDto> {
     // return this.productService.updateProduct(id, updateProductDto);
     try {
-      const serviceResponse = this.productService.updateProduct(id, updateProductDto);
+      const serviceResponse = await this.productService.updateProduct(id, updateProductDto);
       if(!serviceResponse){
         throw new NotFoundException(`product not found`)
       }
